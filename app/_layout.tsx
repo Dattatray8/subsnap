@@ -1,4 +1,5 @@
 import '@/global.css';
+import { SubscriptionsProvider } from "@/lib/SubscriptionsContext";
 import { ClerkProvider } from "@clerk/expo";
 import { tokenCache } from "@clerk/expo/token-cache";
 import { useFonts } from "expo-font";
@@ -38,7 +39,9 @@ export default function RootLayout() {
       options={{ host: process.env.EXPO_PUBLIC_POSTHOG_HOST }}
     >
       <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-        <Stack screenOptions={{ headerShown: false }} />
+        <SubscriptionsProvider>
+          <Stack screenOptions={{ headerShown: false }} />
+        </SubscriptionsProvider>
       </ClerkProvider>
     </PostHogProvider>
   );
