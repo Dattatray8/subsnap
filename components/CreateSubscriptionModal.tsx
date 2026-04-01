@@ -1,6 +1,7 @@
 import { icons } from '@/constants/icons';
 import { clsx } from 'clsx';
 import dayjs from 'dayjs';
+import { usePostHog } from 'posthog-react-native';
 import React, { useState } from 'react';
 import {
     ActivityIndicator,
@@ -50,6 +51,7 @@ const CreateSubscriptionModal = ({
   onClose,
   onSubscriptionCreated,
 }: CreateSubscriptionModalProps) => {
+  const posthog = usePostHog();
   const [formState, setFormState] = useState<FormState>({
     name: '',
     price: '',
@@ -122,6 +124,14 @@ const CreateSubscriptionModal = ({
       await new Promise((resolve) => setTimeout(resolve, 300));
 
       onSubscriptionCreated(newSubscription);
+
+      posthog.capture('subscription_created', {
+        name: newSubscription.name ?? '',
+        category: newSubscription.category ?? '',
+        price: newSubscription.price,
+        billing: newSubscription.billing ?? '',
+      });
+
       resetForm();
       onClose();
     } finally {
